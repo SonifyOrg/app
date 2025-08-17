@@ -3,6 +3,7 @@ import {useState} from "react";
 import CloseIcon from "@/icons/CloseIcon.jsx";
 import CornerOpen from "@/icons/CornerOpen.jsx";
 import DashIcon from "@/icons/DashIcon.jsx";
+import DualPageIcon from "@/icons/DualPageIcon.jsx";
 
 const appWindow = getCurrentWindow();
 
@@ -36,8 +37,8 @@ const TopBar = () => {
                     <CloseIcon/>
                 </button>
 
-                <button id="titlebar-maximize" title="maximize" onClick={handleMaximize} className={`${buttonClasses}`}>
-                    {fullscreen ? <CornerOpen/> : ""}
+                <button id="titlebar-maximize" title={fullscreen ? "maximize" : "restore"} onClick={handleMaximize} className={`${buttonClasses}`}>
+                    {fullscreen ? <CornerOpen/> : <DualPageIcon />}
                 </button>
 
                 <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}>
