@@ -7,11 +7,10 @@ const RoutesPath = () => {
             <TopBar />
             <Routes>
                 <Route index element={<>
-                    main page
-                    <Link to={"/test"} >Naviagte</Link>
+                    i
                 </>} />
             </Routes>
-        </BrowserRouter>,
+        </BrowserRouter>
     </>)
 }
 
