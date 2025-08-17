@@ -21,8 +21,10 @@ const TopBar = () => {
         appWindow.isMaximized().then(isMX => {
             if (isMX) {
                 setFullscreen(true);
+                document.body.style.border = "1px solid var(--color-neutral-700)"
             } else {
                 setFullscreen(false);
+                document.body.style.borderWidth = "0px"
             }
         })
     }
@@ -32,21 +34,22 @@ const TopBar = () => {
     }
 
     return (<div className="titlebar px-3 h-10 bg-dark-2 flex justify-between">
-            <div className="controls flex items-center gap-2">
-                <button id="titlebar-close" title="close" onClick={handleClose} className={`${buttonClasses}`}>
-                    <CloseIcon/>
-                </button>
+        <div className="controls flex items-center gap-2">
+            <button id="titlebar-close" title="close" onClick={handleClose} className={`${buttonClasses}`}>
+                <CloseIcon/>
+            </button>
 
-                <button id="titlebar-maximize" title={fullscreen ? "maximize" : "restore"} onClick={handleMaximize} className={`${buttonClasses}`}>
-                    {fullscreen ? <CornerOpen/> : <DualPageIcon />}
-                </button>
+            <button id="titlebar-maximize" title={fullscreen ? "maximize" : "restore"} onClick={handleMaximize}
+                    className={`${buttonClasses}`}>
+                {fullscreen ? <CornerOpen/> : <DualPageIcon/>}
+            </button>
 
-                <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}>
-                    <DashIcon/>
-                </button>
-            </div>
-            <div data-tauri-drag-region className={"flex-1"}></div>
-        </div>)
+            <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}>
+                <DashIcon/>
+            </button>
+        </div>
+        <div data-tauri-drag-region className={"flex-1"}></div>
+    </div>)
 }
 
 export default TopBar;
