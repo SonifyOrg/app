@@ -1,6 +1,7 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import {useEffect} from "react";
 import CloseIcon from "@/icons/CloseIcon.jsx";
+import CornerOpen from "@/icons/CornerOpen.jsx";
 
 const appWindow = getCurrentWindow();
 
@@ -25,8 +26,13 @@ const TopBar = () => {
                 <button id="titlebar-close" title="close" onClick={handleClose} className={`${buttonClasses}`}>
                     <CloseIcon />
                 </button>
-                <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}></button>
-                <button id="titlebar-maximize" title="maximize" onClick={handleMaximize} className={`${buttonClasses}`}></button>
+
+                <button id="titlebar-maximize" title="maximize" onClick={handleMaximize} className={`${buttonClasses}`}>
+                    <CornerOpen />
+                </button>
+
+                <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}>
+                </button>
             </div>
             <div data-tauri-drag-region className={"flex-1"}></div>
         </div>
