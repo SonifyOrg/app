@@ -1,15 +1,21 @@
 import Spotify from "@/icons/Spotify.jsx";
+import {Link} from "react-router";
+import HomeIcon from "@/icons/HomeIcon.jsx";
 
-const Header = () => (
-    <>
-        <header className={"border border-white w-full h-12 my-2 flex px-4"}>
-            <div className="border flex-1"></div>
-            <div className="border flex-1"></div>
-            <div className="flex-1 flex items-center justify-end">
-                <Spotify />
-            </div>
-        </header>
-    </>
-)
+const Header = () => (<>
+    <header className={" w-full h-12 my-2 flex px-4"}>
+        <div className="border flex-1"></div>
+        <div className="border flex-1 flex justify-center items-center">
+            <Link to="/" className={"size-12 bg-dark-2 rounded-full flex justify-center items-center"}>
+                <HomeIcon />
+            </Link>
+        </div>
+        <div className="flex-1 flex items-center justify-end">
+            <Link to="/">
+                <Spotify/>
+            </Link>
+        </div>
+    </header>
+</>)
 
 export default Header
