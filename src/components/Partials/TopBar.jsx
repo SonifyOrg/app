@@ -1,10 +1,11 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import {useEffect} from "react";
+import CloseIcon from "@/icons/CloseIcon.jsx";
 
 const appWindow = getCurrentWindow();
 
 const TopBar = () => {
-    const buttonClasses = "size-[15px] rounded-full cursor-pointer";
+    const buttonClasses = "size-[24px] rounded-full cursor-pointer bg-dark-3 flex justify-center items-center";
 
     const handleMinimize = () => {
         appWindow.minimize()
@@ -21,9 +22,11 @@ const TopBar = () => {
     return (
         <div className="titlebar px-3 h-10 bg-dark-2 flex justify-between">
             <div className="controls flex items-center gap-2">
-                <button id="titlebar-close" title="close" onClick={handleClose} className={`${buttonClasses} bg-[#FC5753]`}></button>
-                <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses} bg-[#FDBC40]`}></button>
-                <button id="titlebar-maximize" title="maximize" onClick={handleMaximize} className={`${buttonClasses} bg-[#36C84B]`}></button>
+                <button id="titlebar-close" title="close" onClick={handleClose} className={`${buttonClasses}`}>
+                    <CloseIcon />
+                </button>
+                <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}></button>
+                <button id="titlebar-maximize" title="maximize" onClick={handleMaximize} className={`${buttonClasses}`}></button>
             </div>
             <div data-tauri-drag-region className={"flex-1"}></div>
         </div>
