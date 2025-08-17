@@ -1,4 +1,4 @@
 import ReactDOM from "react-dom/client";
-import Routes from "@/components/Routes.jsx";
+import RoutesPath from "@/components/RoutesPath.jsx";
 
-ReactDOM.createRoot(document.getElementById("root")).render(<Routes/>);
+ReactDOM.createRoot(document.getElementById("root")).render(<RoutesPath/>);
