@@ -2,11 +2,12 @@ import { getCurrentWindow } from '@tauri-apps/api/window';
 import {useEffect} from "react";
 import CloseIcon from "@/icons/CloseIcon.jsx";
 import CornerOpen from "@/icons/CornerOpen.jsx";
+import DashIcon from "@/icons/DashIcon.jsx";
 
 const appWindow = getCurrentWindow();
 
 const TopBar = () => {
-    const buttonClasses = "size-[24px] rounded-full cursor-pointer bg-dark-3 flex justify-center items-center";
+    const buttonClasses = "size-[24px] transition-all duration-200 hover:bg-dark-4 rounded-full cursor-pointer bg-dark-3 flex justify-center items-center";
 
     const handleMinimize = () => {
         appWindow.minimize()
@@ -32,6 +33,7 @@ const TopBar = () => {
                 </button>
 
                 <button id="titlebar-minimize" title="minimize" onClick={handleMinimize} className={`${buttonClasses}`}>
+                    <DashIcon />
                 </button>
             </div>
             <div data-tauri-drag-region className={"flex-1"}></div>
