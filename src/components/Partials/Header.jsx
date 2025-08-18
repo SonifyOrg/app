@@ -1,10 +1,11 @@
 import Spotify from "@/icons/Spotify.jsx";
 import {Link} from "react-router";
 import HomeIcon from "@/icons/HomeIcon.jsx";
+import { open } from '@tauri-apps/plugin-shell';
 
 const Header = () => {
-    const handleGithub = () => {
-
+    const handleGithub = async () => {
+        await open("https://github.com/SonifyOrg");
     }
 
     return <>
