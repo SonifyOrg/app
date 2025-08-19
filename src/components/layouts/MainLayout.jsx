@@ -1,7 +1,7 @@
 import Header from "@/components/Partials/Header.jsx";
 import {useMusic} from "@/providers/MusicProvider.jsx";
 import {useEffect, useMemo, useRef, useState} from "react";
-import {Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, VolumeX, Volume2} from "lucide-react";
+import {Repeat, Shuffle, SkipBack, SkipForward} from "lucide-react";
 import PlayIcon from "@/icons/PlayIcon.jsx";
 import PauseIcon from "@/icons/PauseIcon.jsx";
 
@@ -101,8 +101,11 @@ const Player = ({music}) => {
     const handleEnded = () => {
         if (repeat) {
             audio.current.play()
+            return null;
         } else {
             setIsPlaying(false);
+
+            
         }
     }
 
@@ -133,8 +136,9 @@ const Player = ({music}) => {
                 <button onClick={() => setShuffle(!shuffle)} className={shuffle ? "text-green-400" : ""}><Shuffle
                     size={20}/></button>
                 <button><SkipBack size={28}/></button>
-                <button onClick={togglePlay} className="size-12 flex justify-center items-center cursor-pointer bg-primary text-black rounded-full">
-                    {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                <button onClick={togglePlay}
+                        className="size-12 flex justify-center items-center cursor-pointer bg-primary text-black rounded-full">
+                    {isPlaying ? <PauseIcon/> : <PlayIcon/>}
                 </button>
                 <button><SkipForward size={28}/></button>
                 <button onClick={() => setRepeat(!repeat)} className={repeat ? "text-green-400" : ""}><Repeat
@@ -142,19 +146,19 @@ const Player = ({music}) => {
             </div>
         </div>
 
-        <div className="flex items-center gap-2">
-            <button onClick={toggleMute}>
-                {muted ? <VolumeX/> : <Volume2/>}
-            </button>
-            <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={handleVolume}
-            />
-        </div>
+        {/*<div className="flex items-center gap-2">*/}
+        {/*    <button onClick={toggleMute}>*/}
+        {/*        {muted ? <VolumeX/> : <Volume2/>}*/}
+        {/*    </button>*/}
+        {/*    <input*/}
+        {/*        type="range"*/}
+        {/*        min="0"*/}
+        {/*        max="1"*/}
+        {/*        step="0.01"*/}
+        {/*        value={volume}*/}
+        {/*        onChange={handleVolume}*/}
+        {/*    />*/}
+        {/*</div>*/}
     </div>);
 };
 
