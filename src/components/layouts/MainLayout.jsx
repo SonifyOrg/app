@@ -1,6 +1,8 @@
 import Header from "@/components/Partials/Header.jsx";
 import {useMusic} from "@/providers/MusicProvider.jsx";
 import {useMemo} from "react";
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 const MainLayout = ({children}) => {
     const {music} = useMusic();
@@ -27,7 +29,15 @@ const MainLayout = ({children}) => {
                     <h4 className={"text-gray-400 hover:underline cursor-pointer mt-2"}>{music?.artist}</h4>
                 </div>
                 <footer className={"w-full border absolute bottom-0 right-0 min-h-32 px-4"}>
-//Autdio Playerac
+                    {musicAvailable && (<>
+                        <AudioPlayer
+                            src={`http://141.11.37.179:5000/${music.audio}`}
+                            autoPlay={false}
+                            showJumpControls={false}
+                            layout="horizontal"
+                            className="bg-dark-2 text-white"
+                        />
+                    </>)}
                 </footer>
             </div>
         </div>
