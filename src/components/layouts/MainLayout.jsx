@@ -1,15 +1,18 @@
 import Header from "@/components/Partials/Header.jsx";
 import {useMusic} from "@/providers/MusicProvider.jsx";
-import {useMemo} from "react";
-import AudioPlayer from 'react-h5-audio-player';
+import {useMemo, useRef} from "react";
 import 'react-h5-audio-player/lib/styles.css';
 
 const MainLayout = ({children}) => {
-    const {music} = useMusic();
+    const {music, setMusic, songs} = useMusic();
 
     const musicAvailable = useMemo(() => {
         return Object.entries(music).length !== 0
     }, [music]);
+
+    const handleEnded = () => {
+
+    }
 
     return (<>
         <div className={"flex justify-center"}>
@@ -28,20 +31,135 @@ const MainLayout = ({children}) => {
                     <h3 className={"text-3xl font-bold hover:underline cursor-pointer"}>{music?.title}</h3>
                     <h4 className={"text-gray-400 hover:underline cursor-pointer mt-2"}>{music?.artist}</h4>
                 </div>
-                <footer className={"w-full border absolute bottom-0 right-0 min-h-32 px-4"}>
+                <footer className={"w-full absolute bottom-0 right-0"}>
                     {musicAvailable && (<>
-                        <AudioPlayer
-                            src={`http://141.11.37.179:5000/${music.audio}`}
-                            autoPlay={false}
-                            showJumpControls={false}
-                            layout="horizontal"
-                            className="bg-dark-2 text-white"
-                        />
+                        <Player music={music}/>
                     </>)}
                 </footer>
             </div>
         </div>
     </>)
 }
+
+import {useRef, useState, useEffect} from "react";
+import {Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Shuffle} from "lucide-react";
+
+const Player = ({music}) => {
+    const audio = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [volume, setVolume] = useState(0.7);
+    const [muted, setMuted] = useState(false);
+    const [repeat, setRepeat] = useState(false);
+    const [shuffle, setShuffle] = useState(false);
+
+    // شروع پخش
+    useEffect(() => {
+        if (audio.current) {
+            audio.current.volume = volume;
+            audio.current.addEventListener("loadedmetadata", () => {
+                setDuration(audio.current.duration);
+            });
+            audio.current.addEventListener("timeupdate", () => {
+                setProgress(audio.current.currentTime);
+            });
+        }
+    }, [music]);
+
+    const togglePlay = () => {
+        if (isPlaying) {
+            audio.current.pause();
+        } else {
+            audio.current.play();
+        }
+        setIsPlaying(!isPlaying);
+    };
+
+    const handleSeek = (e) => {
+        const value = e.target.value;
+        audio.current.currentTime = value;
+        setProgress(value);
+    };
+
+    const toggleMute = () => {
+        setMuted(!muted);
+        audio.current.muted = !muted;
+    };
+
+    const handleVolume = (e) => {
+        const value = e.target.value;
+        setVolume(value);
+        audio.current.volume = value;
+    };
+
+    const formatTime = (time) => {
+        if (isNaN(time)) return "0:00";
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+    };
+
+    return (
+        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
+            <audio
+                ref={audio}
+                src={`http://141.11.37.179:5000/${music.audio}`}
+                autoPlay
+            />
+
+            {/* اطلاعات آهنگ */}
+            <div className="flex items-center gap-3">
+                <img src={`http://141.11.37.179:5000/${music.cover}`} alt={music.title} className="w-14 h-14 rounded-lg object-cover"/>
+                <div>
+                    <h4 className="font-semibold">{music.title}</h4>
+                    <p className="text-sm text-gray-400">{music.artist}</p>
+                </div>
+            </div>
+
+            {/* کنترل‌ها */}
+            <div className="flex flex-col items-center w-full md:w-auto">
+                <div className="flex items-center gap-4">
+                    <button onClick={() => setShuffle(!shuffle)} className={shuffle ? "text-green-400" : ""}><Shuffle size={20}/></button>
+                    <button><SkipBack size={28}/></button>
+                    <button onClick={togglePlay} className="p-2 bg-white text-black rounded-full">
+                        {isPlaying ? <Pause size={24}/> : <Play size={24}/>}
+                    </button>
+                    <button><SkipForward size={28}/></button>
+                    <button onClick={() => setRepeat(!repeat)} className={repeat ? "text-green-400" : ""}><Repeat size={20}/></button>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="flex items-center gap-2 w-full">
+                    <span className="text-xs">{formatTime(progress)}</span>
+                    <input
+                        type="range"
+                        min="0"
+                        max={duration}
+                        value={progress}
+                        onChange={handleSeek}
+                        className="w-full"
+                    />
+                    <span className="text-xs">{formatTime(duration)}</span>
+                </div>
+            </div>
+
+            {/* ولوم */}
+            <div className="flex items-center gap-2">
+                <button onClick={toggleMute}>
+                    {muted ? <VolumeX/> : <Volume2/>}
+                </button>
+                <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={handleVolume}
+                />
+            </div>
+        </div>
+    );
+};
 
 export default MainLayout;
