@@ -12,8 +12,7 @@
   "app": {
     "windows": [
       {
-        "decorations": false,
-        "transparent": true,
+        "title": "Sonify",
         "minWidth": 800,
         "minHeight": 500
       }

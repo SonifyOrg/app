@@ -5,7 +5,6 @@ import MainLayout from "@/components/layouts/MainLayout.jsx";
 const RoutesPath = () => {
     return (<>
         <BrowserRouter>
-            <TopBar />
             <MainLayout>
                 <Routes>
                     <Route index element={<>

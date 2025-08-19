@@ -10,6 +10,6 @@
 
 @layer base {
     body {
-        @apply bg-dark text-white h-screen border border-neutral-700
+        @apply bg-dark text-white
     }
 }
