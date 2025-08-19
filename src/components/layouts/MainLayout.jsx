@@ -35,7 +35,7 @@ const MainLayout = ({children}) => {
                 </div>
                 <footer className={"w-full absolute bottom-0 right-0"}>
                     {musicAvailable && (<>
-                        <Player music={music}/>
+                        <Player music={music} songs={songs} setMusic={setMusic}/>
                     </>)}
                 </footer>
             </div>
@@ -43,7 +43,7 @@ const MainLayout = ({children}) => {
     </>)
 }
 
-const Player = ({music}) => {
+const Player = ({music, songs, setMusic}) => {
     const audio = useRef(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [progress, setProgress] = useState(0);
@@ -92,16 +92,44 @@ const Player = ({music}) => {
             audio.current.play()
             return null;
         } else {
-            setIsPlaying(false);
+            if (shuffle) {
+                handleNext()
+            } else {
+                setIsPlaying(false);
+            }
         }
     }
 
     const handlePrev = () => {
-        alert("kkm")
+        let ndis = null
+
+        songs.map((sg, index) => {
+            if (sg._id === music._id) {
+                ndis = index;
+            }
+        })
+
+        const prev = songs.find((sg, index) => index === ndis - 1)
+
+        if (prev) {
+            setMusic(prev);
+        }
     }
 
     const handleNext = () => {
+        let ndis = null
 
+        songs.map((sg, index) => {
+            if (sg._id === music._id) {
+                ndis = index;
+            }
+        })
+
+        const next = songs.find((sg, index) => index === ndis + 1)
+
+        if (next) {
+            setMusic(next);
+        }
     }
 
     return (<div
