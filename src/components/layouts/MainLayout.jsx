@@ -1,7 +1,7 @@
 import Header from "@/components/Partials/Header.jsx";
 import {useMusic} from "@/providers/MusicProvider.jsx";
-import {useMemo, useRef} from "react";
-import 'react-h5-audio-player/lib/styles.css';
+import {useEffect, useMemo, useRef, useState} from "react";
+import {Pause, Play, Repeat, Shuffle, SkipBack, SkipForward} from "lucide-react";
 
 const MainLayout = ({children}) => {
     const {music, setMusic, songs} = useMusic();
@@ -41,12 +41,9 @@ const MainLayout = ({children}) => {
     </>)
 }
 
-import {useRef, useState, useEffect} from "react";
-import {Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Shuffle} from "lucide-react";
-
 const Player = ({music}) => {
     const audio = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(0.7);
@@ -54,7 +51,6 @@ const Player = ({music}) => {
     const [repeat, setRepeat] = useState(false);
     const [shuffle, setShuffle] = useState(false);
 
-    // شروع پخش
     useEffect(() => {
         if (audio.current) {
             audio.current.volume = volume;
@@ -100,66 +96,64 @@ const Player = ({music}) => {
         return `${minutes}:${seconds}`;
     };
 
-    return (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
-            <audio
-                ref={audio}
-                src={`http://141.11.37.179:5000/${music.audio}`}
-                autoPlay
+    const handleEnded = () => {
+        if (repeat) {
+            audio.current.play()
+        } else {
+            setIsPlaying(false);
+        }
+    }
+
+    return (<div
+        className="w-full text-white p-4 flex flex-col gap-4">
+        <audio
+            ref={audio}
+            src={`http://141.11.37.179:5000/${music.audio}`}
+            autoPlay
+            onEnded={handleEnded}
+        />
+
+        <div className="flex items-center gap-2 w-full">
+            <span className="text-xs">{formatTime(progress)}</span>
+            <input
+                type="range"
+                min="0"
+                max={duration}
+                value={progress}
+                onChange={handleSeek}
+                className="w-full"
             />
+            <span className="text-xs">{formatTime(duration)}</span>
+        </div>
 
-            {/* اطلاعات آهنگ */}
-            <div className="flex items-center gap-3">
-                <img src={`http://141.11.37.179:5000/${music.cover}`} alt={music.title} className="w-14 h-14 rounded-lg object-cover"/>
-                <div>
-                    <h4 className="font-semibold">{music.title}</h4>
-                    <p className="text-sm text-gray-400">{music.artist}</p>
-                </div>
-            </div>
-
-            {/* کنترل‌ها */}
-            <div className="flex flex-col items-center w-full md:w-auto">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => setShuffle(!shuffle)} className={shuffle ? "text-green-400" : ""}><Shuffle size={20}/></button>
-                    <button><SkipBack size={28}/></button>
-                    <button onClick={togglePlay} className="p-2 bg-white text-black rounded-full">
-                        {isPlaying ? <Pause size={24}/> : <Play size={24}/>}
-                    </button>
-                    <button><SkipForward size={28}/></button>
-                    <button onClick={() => setRepeat(!repeat)} className={repeat ? "text-green-400" : ""}><Repeat size={20}/></button>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="flex items-center gap-2 w-full">
-                    <span className="text-xs">{formatTime(progress)}</span>
-                    <input
-                        type="range"
-                        min="0"
-                        max={duration}
-                        value={progress}
-                        onChange={handleSeek}
-                        className="w-full"
-                    />
-                    <span className="text-xs">{formatTime(duration)}</span>
-                </div>
-            </div>
-
-            {/* ولوم */}
-            <div className="flex items-center gap-2">
-                <button onClick={toggleMute}>
-                    {muted ? <VolumeX/> : <Volume2/>}
+        <div className="flex flex-col items-center w-full md:w-auto">
+            <div className="flex items-center gap-4">
+                <button onClick={() => setShuffle(!shuffle)} className={shuffle ? "text-green-400" : ""}><Shuffle
+                    size={20}/></button>
+                <button><SkipBack size={28}/></button>
+                <button onClick={togglePlay} className="p-2 bg-white text-black rounded-full">
+                    {isPlaying ? <Pause size={24}/> : <Play size={24}/>}
                 </button>
-                <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={volume}
-                    onChange={handleVolume}
-                />
+                <button><SkipForward size={28}/></button>
+                <button onClick={() => setRepeat(!repeat)} className={repeat ? "text-green-400" : ""}><Repeat
+                    size={20}/></button>
             </div>
         </div>
-    );
+
+        {/*<div className="flex items-center gap-2">*/}
+        {/*    <button onClick={toggleMute}>*/}
+        {/*        {muted ? <VolumeX/> : <Volume2/>}*/}
+        {/*    </button>*/}
+        {/*    <input*/}
+        {/*        type="range"*/}
+        {/*        min="0"*/}
+        {/*        max="1"*/}
+        {/*        step="0.01"*/}
+        {/*        value={volume}*/}
+        {/*        onChange={handleVolume}*/}
+        {/*    />*/}
+        {/*</div>*/}
+    </div>);
 };
 
 export default MainLayout;

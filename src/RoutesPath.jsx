@@ -1,5 +1,4 @@
-import {BrowserRouter, Link, Route, Routes} from "react-router";
-import TopBar from "@/components/Partials/TopBar.jsx";
+import {BrowserRouter, Route, Routes} from "react-router";
 import MainLayout from "@/components/layouts/MainLayout.jsx";
 import Main from "@/components/pages/Main.jsx";
 import MusicProvider from "@/providers/MusicProvider.jsx";
@@ -10,7 +9,7 @@ const RoutesPath = () => {
             <MusicProvider>
                 <MainLayout>
                     <Routes>
-                        <Route index element={<Main />} />
+                        <Route index element={<Main/>}/>
                     </Routes>
                 </MainLayout>
             </MusicProvider>
