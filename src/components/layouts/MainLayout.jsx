@@ -80,17 +80,6 @@ const Player = ({music}) => {
         setProgress(value);
     };
 
-    const toggleMute = () => {
-        setMuted(!muted);
-        audio.current.muted = !muted;
-    };
-
-    const handleVolume = (e) => {
-        const value = e.target.value;
-        setVolume(value);
-        audio.current.volume = value;
-    };
-
     const formatTime = (time) => {
         if (isNaN(time)) return "0:00";
         const minutes = Math.floor(time / 60);
@@ -104,8 +93,6 @@ const Player = ({music}) => {
             return null;
         } else {
             setIsPlaying(false);
-
-            
         }
     }
 
@@ -145,20 +132,6 @@ const Player = ({music}) => {
                     size={20}/></button>
             </div>
         </div>
-
-        {/*<div className="flex items-center gap-2">*/}
-        {/*    <button onClick={toggleMute}>*/}
-        {/*        {muted ? <VolumeX/> : <Volume2/>}*/}
-        {/*    </button>*/}
-        {/*    <input*/}
-        {/*        type="range"*/}
-        {/*        min="0"*/}
-        {/*        max="1"*/}
-        {/*        step="0.01"*/}
-        {/*        value={volume}*/}
-        {/*        onChange={handleVolume}*/}
-        {/*    />*/}
-        {/*</div>*/}
     </div>);
 };
 
