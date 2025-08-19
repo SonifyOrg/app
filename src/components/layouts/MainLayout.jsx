@@ -2,8 +2,6 @@ import Header from "@/components/Partials/Header.jsx";
 import {useMusic} from "@/providers/MusicProvider.jsx";
 
 const MainLayout = ({children}) => {
-    const {music} = useMusic()
-
     return (<>
         <div className={"flex"}>
             <div className={"basis-9/12"}>
