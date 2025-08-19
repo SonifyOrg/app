@@ -14,7 +14,8 @@
       {
         "title": "Sonify",
         "minWidth": 800,
-        "minHeight": 500
+        "minHeight": 500,
+        "maximized": true
       }
     ],
     "security": {

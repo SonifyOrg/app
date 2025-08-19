@@ -3,7 +3,7 @@ const PlayIcon = () => (<>
          xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" className={"size-4"}>
         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-        <g id="SVGRepo_iconCarrier"><title>play [#1001]</title>
+        <g id="SVGRepo_iconCarrier">
             <defs></defs>
             <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="Dribbble-Light-Preview" transform="translate(-427.000000, -3765.000000)" fill="#000000">
