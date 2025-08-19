@@ -2,9 +2,16 @@ import Header from "@/components/Partials/Header.jsx";
 
 const MainLayout = ({ children }) => {
     return (<>
-        <Header />
-        <div className={"max-w-[1440px] border py-5 mx-auto"}>
-            {children}
+        <div className={"flex"}>
+            <div className={"basis-9/12"}>
+                <Header />
+                <div className={"px-4 border py-5 mx-auto"}>
+                    {children}
+                </div>
+            </div>
+            <div className={"basis-3/12 border border-red-500"}>
+
+            </div>
         </div>
     </>)
 }
