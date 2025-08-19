@@ -48,138 +48,108 @@ const Player = ({music, songs, setMusic}) => {
     const [isPlaying, setIsPlaying] = useState(true);
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(1);
-    const [muted, setMuted] = useState(false);
     const [repeat, setRepeat] = useState(false);
     const [shuffle, setShuffle] = useState(false);
 
     useEffect(() => {
-        if (audio.current) {
-            audio.current.volume = volume;
-            audio.current.addEventListener("loadedmetadata", () => {
-                setDuration(audio.current.duration);
-            });
-            audio.current.addEventListener("timeupdate", () => {
-                setProgress(audio.current.currentTime);
-            });
-        }
+        if (!audio.current) return;
+
+        audio.current.volume = 1;
+        const el = audio.current;
+
+        const setMeta = () => setDuration(el.duration);
+        const updateTime = () => setProgress(el.currentTime);
+
+        el.addEventListener("loadedmetadata", setMeta);
+        el.addEventListener("timeupdate", updateTime);
+
+        return () => {
+            el.removeEventListener("loadedmetadata", setMeta);
+            el.removeEventListener("timeupdate", updateTime);
+        };
     }, [music]);
 
     const togglePlay = () => {
-        if (isPlaying) {
-            audio.current.pause();
-        } else {
-            audio.current.play();
-        }
+        if (!audio.current) return;
+        isPlaying ? audio.current.pause() : audio.current.play();
         setIsPlaying(!isPlaying);
     };
 
     const handleSeek = (e) => {
-        const value = e.target.value;
+        const value = +e.target.value;
         audio.current.currentTime = value;
         setProgress(value);
     };
 
-    const formatTime = (time) => {
-        if (isNaN(time)) return "0:00";
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60).toString().padStart(2, "0");
-        return `${minutes}:${seconds}`;
+    const formatTime = (t) => {
+        if (isNaN(t)) return "0:00";
+        const m = Math.floor(t / 60);
+        const s = Math.floor(t % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+    };
+
+    const changeSong = (step) => {
+        const index = songs.findIndex((s) => s._id === music._id);
+        const next = songs[index + step];
+        if (next) setMusic(next);
     };
 
     const handleEnded = () => {
-        if (repeat) {
-            audio.current.play()
-            return null;
-        } else {
-            if (shuffle) {
-                handleNext()
-            } else {
-                setIsPlaying(false);
-            }
-        }
-    }
+        if (repeat) return audio.current.play();
+        shuffle ? changeSong(1) : setIsPlaying(false);
+    };
 
-    const handlePrev = () => {
-        let ndis = null
-
-        songs.map((sg, index) => {
-            if (sg._id === music._id) {
-                ndis = index;
-            }
-        })
-
-        const prev = songs.find((sg, index) => index === ndis - 1)
-
-        if (prev) {
-            setMusic(prev);
-        }
-    }
-
-    const handleNext = () => {
-        let ndis = null
-
-        songs.map((sg, index) => {
-            if (sg._id === music._id) {
-                ndis = index;
-            }
-        })
-
-        const next = songs.find((sg, index) => index === ndis + 1)
-
-        if (next) {
-            setMusic(next);
-        }
-    }
-
-    return (<div
-        className="w-full text-white p-4 flex flex-col gap-4">
-        <audio
-            ref={audio}
-            src={`http://141.11.37.179:5000/${music.audio}`}
-            autoPlay
-            onEnded={handleEnded}
-        />
-
-        <div className="flex items-center gap-2 w-full">
-            <span className="text-xs">{formatTime(progress)}</span>
-            <input
-                type="range"
-                min="0"
-                max={duration}
-                value={progress}
-                onChange={handleSeek}
-                className="w-full h-2 bg-gray-300 rounded appearance-none accent-primary hover:accent-primary focus:outline-none"
-                style={{
-                    background: `linear-gradient(to right, var(--color-primary) ${progress / duration * 100}%, #d1d5db 0%)`,
-                }}
+    return (<div className="w-full text-white p-4 flex flex-col gap-4">
+            <audio
+                ref={audio}
+                src={`http://141.11.37.179:5000/${music.audio}`}
+                autoPlay
+                onEnded={handleEnded}
             />
-            <span className="text-xs">{formatTime(duration)}</span>
-        </div>
 
-        <div className="flex items-center w-fit  mx-auto gap-4">
-            <button onClick={() => setShuffle(!shuffle)} className={`cursor-pointer ${shuffle && "text-green-400"}`}>
-                <Shuffle size={20}/>
-            </button>
-            <button onClick={handlePrev} className={"cursor-pointer"}>
-                <SkipBack size={28}/>
-            </button>
-            <button
-                onClick={togglePlay}
-                className="size-12 flex justify-center items-center cursor-pointer bg-primary text-black rounded-full"
-            >
-                {isPlaying ? <PauseIcon/> : <PlayIcon/>}
-            </button>
-            <button onClick={handleNext} className={"cursor-pointer"}>
-                <SkipForward size={28}/>
-            </button>
-            <button
-                onClick={() => setRepeat(!repeat)}
-                className={`cursor-pointer ${repeat && "text-green-400"}`}>
-                <Repeat size={20}/>
-            </button>
-        </div>
-    </div>);
+            <div className="flex items-center gap-2 w-full">
+                <span className="text-xs">{formatTime(progress)}</span>
+                <input
+                    type="range"
+                    min="0"
+                    max={duration}
+                    value={progress}
+                    onChange={handleSeek}
+                    className="w-full h-2 bg-gray-300 rounded appearance-none accent-primary"
+                    style={{
+                        background: `linear-gradient(to right, var(--color-primary) ${(progress / duration) * 100}%, #d1d5db 0%)`,
+                    }}
+                />
+                <span className="text-xs">{formatTime(duration)}</span>
+            </div>
+
+            <div className="flex items-center mx-auto gap-4">
+                <button
+                    onClick={() => setShuffle(!shuffle)}
+                    className={shuffle ? "text-green-400" : ""}
+                >
+                    <Shuffle size={20}/>
+                </button>
+                <button onClick={() => changeSong(-1)}>
+                    <SkipBack size={28}/>
+                </button>
+                <button
+                    onClick={togglePlay}
+                    className="size-12 flex justify-center items-center bg-primary text-black rounded-full"
+                >
+                    {isPlaying ? <PauseIcon/> : <PlayIcon/>}
+                </button>
+                <button onClick={() => changeSong(1)}>
+                    <SkipForward size={28}/>
+                </button>
+                <button
+                    onClick={() => setRepeat(!repeat)}
+                    className={repeat ? "text-green-400" : ""}
+                >
+                    <Repeat size={20}/>
+                </button>
+            </div>
+        </div>);
 };
 
 export default MainLayout;
