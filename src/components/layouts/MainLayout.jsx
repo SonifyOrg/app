@@ -48,7 +48,7 @@ const Player = ({music}) => {
     const [isPlaying, setIsPlaying] = useState(true);
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(0.7);
+    const [volume, setVolume] = useState(1);
     const [muted, setMuted] = useState(false);
     const [repeat, setRepeat] = useState(false);
     const [shuffle, setShuffle] = useState(false);
@@ -96,6 +96,14 @@ const Player = ({music}) => {
         }
     }
 
+    const handlePrev = () => {
+        alert("kkm")
+    }
+
+    const handleNext = () => {
+
+    }
+
     return (<div
         className="w-full text-white p-4 flex flex-col gap-4">
         <audio
@@ -113,24 +121,35 @@ const Player = ({music}) => {
                 max={duration}
                 value={progress}
                 onChange={handleSeek}
-                className="w-full"
+                className="w-full h-2 bg-gray-300 rounded appearance-none accent-primary hover:accent-primary focus:outline-none"
+                style={{
+                    background: `linear-gradient(to right, var(--color-primary) ${progress / duration * 100}%, #d1d5db 0%)`,
+                }}
             />
             <span className="text-xs">{formatTime(duration)}</span>
         </div>
 
-        <div className="flex flex-col items-center w-full md:w-auto">
-            <div className="flex items-center gap-4">
-                <button onClick={() => setShuffle(!shuffle)} className={shuffle ? "text-green-400" : ""}><Shuffle
-                    size={20}/></button>
-                <button><SkipBack size={28}/></button>
-                <button onClick={togglePlay}
-                        className="size-12 flex justify-center items-center cursor-pointer bg-primary text-black rounded-full">
-                    {isPlaying ? <PauseIcon/> : <PlayIcon/>}
-                </button>
-                <button><SkipForward size={28}/></button>
-                <button onClick={() => setRepeat(!repeat)} className={repeat ? "text-green-400" : ""}><Repeat
-                    size={20}/></button>
-            </div>
+        <div className="flex items-center w-fit  mx-auto gap-4">
+            <button onClick={() => setShuffle(!shuffle)} className={`cursor-pointer ${shuffle && "text-green-400"}`}>
+                <Shuffle size={20}/>
+            </button>
+            <button onClick={handlePrev} className={"cursor-pointer"}>
+                <SkipBack size={28}/>
+            </button>
+            <button
+                onClick={togglePlay}
+                className="size-12 flex justify-center items-center cursor-pointer bg-primary text-black rounded-full"
+            >
+                {isPlaying ? <PauseIcon/> : <PlayIcon/>}
+            </button>
+            <button onClick={handleNext} className={"cursor-pointer"}>
+                <SkipForward size={28}/>
+            </button>
+            <button
+                onClick={() => setRepeat(!repeat)}
+                className={`cursor-pointer ${repeat && "text-green-400"}`}>
+                <Repeat size={20}/>
+            </button>
         </div>
     </div>);
 };
