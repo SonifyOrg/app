@@ -54,8 +54,8 @@ const Player = ({music, songs, setMusic}) => {
     useEffect(() => {
         if (!audio.current) return;
 
-        audio.current.volume = 1;
         const el = audio.current;
+        el.volume = 1;
 
         const setMeta = () => setDuration(el.duration);
         const updateTime = () => setProgress(el.currentTime);
@@ -90,13 +90,29 @@ const Player = ({music, songs, setMusic}) => {
 
     const changeSong = (step) => {
         const index = songs.findIndex((s) => s._id === music._id);
-        const next = songs[index + step];
+        let nextIndex = index + step;
+
+        if (shuffle && nextIndex >= songs.length) {
+            nextIndex = 0;
+        }
+
+        if (shuffle && nextIndex < 0) {
+            nextIndex = songs.length - 1;
+        }
+
+        const next = songs[nextIndex];
         if (next) setMusic(next);
     };
 
     const handleEnded = () => {
-        if (repeat) return audio.current.play();
-        shuffle ? changeSong(1) : setIsPlaying(false);
+        if (repeat) {
+            return audio.current.play();
+        }
+        if (shuffle) {
+            changeSong(1);
+        } else {
+            setIsPlaying(false);
+        }
     };
 
     return (<div className="w-full text-white p-4 flex flex-col gap-4">

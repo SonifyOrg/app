@@ -10,7 +10,7 @@
 
 @layer base {
     body {
-        @apply bg-dark text-white
+        @apply bg-dark text-white overflow-x-hidden
     }
 
     .rhap_container > .rhap_main {
